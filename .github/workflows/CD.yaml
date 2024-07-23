@@ -1,0 +1,57 @@
+name: Continuous Deployment
+on:
+  push:
+    tags: 'v*.*.*'
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    name: Build on ${{matrix.os}}
+    runs-on: ${{matrix.os}}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+          check-latest: true
+          cache: 'pip'
+      - name: Install requirements
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+      - name: Run static checks
+        run: |
+          python -m ruff format --check
+          python -m ruff check --no-fix
+          python -m pyright
+      - name: Run tests
+        run: python -m pytest --cov=weather --cov-fail-under=100
+      - name: Set executable name on Linux
+        if: ${{ runner.os == 'Linux' }}
+        run: echo "executable=weather_linux_${{ github.ref_name }}" >> $GITHUB_ENV
+      - name: Set executable name on Windows
+        if: ${{ runner.os == 'Windows' }}
+        run: echo "executable=weather_windows_${{ github.ref_name }}.exe" | Out-File -FilePath $env:GITHUB_ENV -Append
+      - name: Build executable
+        run: python -m flet.cli.cli pack weather/__main__.py --name ${{ env.executable }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.executable }}
+          path: dist/${{ env.executable }}*
+  release:
+    name: Create release
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          title: ${{ github.ref_name }}
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          prerelease: false
+          files: |
+            **/weather_linux_v*
+            **/weather_windows_v*.exe

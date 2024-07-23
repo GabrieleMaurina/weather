@@ -1,0 +1,11 @@
+#keep list sorted alphabetically
+
+flet
+pillow
+pyinstaller
+pyright
+pytest
+pytest-cov
+pytest-mock
+requests
+ruff
