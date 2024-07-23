@@ -1,6 +1,7 @@
 #keep list sorted alphabetically
 
 flet
+geocoder
 pillow
 pyinstaller
 pyright
