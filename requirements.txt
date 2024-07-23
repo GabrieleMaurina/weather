@@ -2,6 +2,7 @@
 
 flet
 geocoder
+openmeteo-requests
 pillow
 pyinstaller
 pyright
