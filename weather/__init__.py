@@ -8,8 +8,6 @@ def weather_app(page: flet.Page) -> None:
     page.title = "Weather"
     page.vertical_alignment = flet.MainAxisAlignment.CENTER
     page.add(
-        flet.Row(
-            [flet.Text(f"Weather\n{address}")], alignment=flet.MainAxisAlignment.CENTER
-        )
+        flet.Row([flet.Text(address, size=50)], alignment=flet.MainAxisAlignment.CENTER)
     )
     lat, lon, address = weather.location.get_lat_lon()
