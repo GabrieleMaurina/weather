@@ -1,1 +1,1 @@
-python -m weather
+python -m weather_desktop
