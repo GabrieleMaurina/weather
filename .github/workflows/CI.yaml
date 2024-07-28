@@ -29,6 +29,6 @@ jobs:
           python -m ruff check --no-fix
           python -m pyright
       - name: Run tests
-        run: python -m pytest --cov=weather --cov-fail-under=100
+        run: python -m pytest --cov=weather_desktop --cov-fail-under=100
       - name: Build executable
-        run: python -m flet.cli.cli pack weather/__main__.py
+        run: python -m flet.cli.cli pack weather_desktop/__main__.py
