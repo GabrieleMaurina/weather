@@ -1,1 +1,1 @@
-python -m pytest --cov=weather --cov-fail-under=100
+python -m pytest --cov=weather_desktop --cov-fail-under=100
